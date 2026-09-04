@@ -56,6 +56,32 @@ public class NotificationService
 
 ```
 
+**Пример "неподходящего" кода**
+
+```csharp
+public class UserManager 
+{
+    public async Task Add(User user, CancellationToken cancellationToken = default)
+    {
+        await AddToDb.Add(user, cancellationToken);
+        await NotifyToMail.Notify("User added");
+    }
+
+    public async Task AddToDb(User user, CancellationToken cancellationToken = default)
+    {
+        const string sql = "INSERT INTO USERS ...";
+        // ... ответственность за БД
+    }
+
+    public async Task NotifyToMail(string message, CancellationToken cancellationToken = default)
+    {
+        // ... ответственность за уведомления на почту
+    }
+}
+
+
+```
+
 #### Open\Closed Principle
 #### Liskov Substitution Principle
 #### Interface Segregation Principle
