@@ -114,6 +114,7 @@ public class UserManager
 Таким образом, сущность пользователя не будет отвечать за вывод данных, и класс, отвечающий за вывод данных, не будет отвечать за конкретный вывод. 
 
 **Схема:**
+
 ![alt text](ocp_examlpe.png)
 
 **Пример кода**
@@ -186,5 +187,91 @@ public class User
 
 ```
 #### Liskov Substitution Principle
+**Основная мысль:**
+> Нужно, чтобы реализуемая логика могла быть взаимозаменяемой, т.е быть транзитивной. (0 - А; 0 - Б => А = Б)
+
+**Описание:**
+Принцип рассказывает о том, что необходимо правильно выделять логику и контракты, осмысленно использовать наследование таким образом, чтобы реализуемые компоненты можно было заменить другими, в эту же очередь смысл их не поменялся.
+
+> Квадрат не может заменить любой прямоугольник. То есть квадрат - частное из прямоугольника
+
+Самый простой и банальный пример описан в книге Роберта Мартина. Здесь мы его тоже используем.
+
+Это пример с квадратом и прямоугольником.
+
+Представим, у нас есть прямоугольник. У прямоугольника есть ширина и длина.
+
+Теперь, так как квадрат в своем роде может быть прямоугольником, наследуем квадрату логику от прямоугольника.
+
+В случае, когда стороны равны, все ок.
+
+НО! Если стороны не равны, логика квадрата становится неверной, так как у квадрата все стороны равны.
+
+Из этого выходит, что квадрат выдает неверные результаты. Как раз таки это наглядно и показывает принцип подстановки Барбары Лисков.
+
+**Схема:**
+
+![alt text](ocp_examlpe.png)
+
+
+**Пример кода**
+```csharp
+var goodService = new Service();
+var goodRectangle = new Rectangle { Width = 5, Height = 10 };
+var goodSquare = new Square { Side = 5 };
+goodService.PrintArea(goodRectangle);
+goodService.PrintArea(goodSquare);
+
+public class Service
+{
+    public void PrintArea(IShape shape)
+    {
+        Console.WriteLine(shape.GetArea());
+    }
+}
+public interface IShape
+{
+    double GetArea();
+}
+public class Rectangle : IShape
+{
+    public double Width { get; set; }
+    public double Height { get; set; }
+    public double GetArea() => Width * Height;
+}
+public class Square : IShape
+{
+    public double Side { get; set; }
+    public double GetArea() => Side * Side;
+}
+```
+
+
+**Пример "неподходящего" кода**
+```csharp
+var badService = new Service();
+var badRectangle = new Rectangle { Width = 5, Height = 10 };
+var badSquare = new Square { Width = 5, Height = 5 };
+badService.PrintArea(badRectangle);
+badService.PrintArea(badSquare);
+
+public class Service
+{
+    public void PrintArea(Rectangle rectangle)
+    {
+        Console.WriteLine(rectangle.GetArea());
+    }
+}
+public class Rectangle
+{
+    public virtual double Width { get; set; }
+    public virtual double Height { get; set; }
+    public double GetArea() => Width * Height;
+}
+public class Square : Rectangle
+{
+}
+```
+
 #### Interface Segregation Principle
 #### Dependency Inversion Principle
