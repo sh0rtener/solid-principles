@@ -211,7 +211,7 @@ public class User
 
 **Схема:**
 
-![alt text](ocp_examlpe.png)
+![alt text](lsp_examlpe.png)
 
 
 **Пример кода**
