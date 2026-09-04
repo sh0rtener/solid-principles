@@ -211,7 +211,7 @@ public class User
 
 **Схема:**
 
-![alt text](lsp_examlpe.png)
+![alt text](lsp_example.png)
 
 
 **Пример кода**
