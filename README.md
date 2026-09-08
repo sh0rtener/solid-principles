@@ -274,4 +274,54 @@ public class Square : Rectangle
 ```
 
 #### Interface Segregation Principle
+**Основная мысль:**
+> Интерфейс не должен нести в себе лишних зависимостей в виде ненужных функций и лишнего груза
+
+**Описание:**
+Принцип рассказывает о том, что необходимо также разделять и интерфейсы по своей сущности. Интерфейс должен предоставлять только необходимую логику, без лишнего груза и функций.
+
+В целом принцип прост, следовательно просто предоставлю схему и пример кода
+
+**Схема:**
+
+![alt text](isp_example.png)
+
+
+**Пример кода**
+```csharp
+public interface IUserRepository
+{
+    void Get();
+    void Create();
+    void Update();
+    void Remove();
+}
+
+public interface IUserStatusRepository
+{
+    void Get();
+    void Create();
+    void Update();
+    void Remove();
+}
+```
+
+
+**Пример "неподходящего" кода**
+```csharp
+public interface IUserRepository
+{
+    void Get();
+    void Create();
+    void Update();
+    void Remove();
+
+    void GetStatuses();
+    void CreateStatus();
+    void UpdateStatus();
+    void RemoveStatus();
+}
+```
+
+
 #### Dependency Inversion Principle
