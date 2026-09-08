@@ -325,3 +325,158 @@ public interface IUserRepository
 
 
 #### Dependency Inversion Principle
+**Основная мысль:**
+> Разделение конкретной реализации на абстракции (интерфейсы, контракты) в целях достижения гибкости системы
+
+**Описание:**
+Принцип представляет собой правило, которое говорит о том, что вместо реализации функционала стоит задуматься об его абстракции.
+
+В качестве примера опишем стандартное приложение, хранящее в себе некоторые данные.
+Если не следовать данному принципу, то можно в лучшем случае создать реализации без абстракций для работы с компонентами, например:
+- пользователь;
+- работа с хранилищем пользователя;
+- работа с пользователем. 
+
+И в случае, когда нужно будет изменить логику работы с хранилищем пользователя, класс работы с пользователем и непосредственно сам класс для работы с хранилищем пользователя будет изменен.
+
+Дело в том, что абстракции меняются наиболее реже реализаций, и этим также изначально обозначают правила.
+
+Конкретно в .NET это можно добится через механизм DI, но также самым популярным решением является [абстрактная фабрика](https://metanit.com/sharp/patterns/2.2.php)
+
+**Схема:**
+
+![alt text](dip_example.png)
+
+
+**Пример кода**
+```csharp
+public class UserController
+{
+    private readonly IUserService _userService;
+
+    public UserController(IUserService userService)
+    {
+        _userService = userService;
+    }
+}
+
+
+public interface IUserService
+{
+    void DoSomething();
+}
+
+
+public class UserServiceImpl1 : IUserService
+{
+    private readonly IUserRepository _userRepository;
+
+    public UserServiceImpl1(IUserRepository userRepository)
+    {
+        _userRepository = userRepository;
+    }
+
+    public void DoSomething()
+    {
+    }
+}
+
+
+public class UserServiceImpl2 : IUserService
+{
+    private readonly IUserRepository _userRepository;
+
+    public UserServiceImpl2(IUserRepository userRepository)
+    {
+        _userRepository = userRepository;
+    }
+
+    public void DoSomething()
+    {
+    }
+}
+
+
+public interface IUserRepository
+{
+    void Get();
+    void Create();
+    void Update();
+    void Remove();
+}
+
+
+public class UserRepositoryImpl1 : IUserRepository
+{
+    public void Get()
+    {
+    }
+
+    public void Create()
+    {
+    }
+
+    public void Update()
+    {
+    }
+
+    public void Remove()
+    {
+    }
+}
+
+
+public class UserRepositoryImpl2 : IUserRepository
+{
+    public void Get()
+    {
+    }
+
+    public void Create()
+    {
+    }
+
+    public void Update()
+    {
+    }
+
+    public void Remove()
+    {
+    }
+}
+
+```
+
+**Пример "неподходящего" кода**
+```csharp
+public class UserController
+{
+    private readonly UserServiceImpl _userService;
+
+    public UserController(UserServiceImpl userService)
+    {
+        _userService = userService;
+    }
+}
+
+public class UserServiceImpl
+{
+    private readonly UserRepositoryImpl _userRepository;
+
+    public UserServiceImpl(UserRepositoryImpl userRepository)
+    {
+        _userRepository = userRepository;
+    }
+    // ...
+}
+
+public class UserRepositoryImpl
+{
+    public void Get()
+    {
+        // ...
+    }
+
+    // ...
+}
+```
